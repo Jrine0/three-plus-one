@@ -14,7 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getTransactions, getTotalRoundUp, getVaultBalance, upsertVaultBalance } from '@/db/api';
 import { seedUserTransactions } from '@/services/plaid';
 import { simulateVolatility } from '@/services/volatility';
-import { depositToRiskyPool, getRiskyPoolBalance, getSafeVaultBalance, isMetaMaskInstalled } from '@/lib/web3';
+import { submitVaultDeposit } from '@/lib/web3';
 import { toast } from 'sonner';
 import type { Transaction, VolatilityStatus, VaultBalance } from '@/types';
 
@@ -58,29 +58,7 @@ export default function DashboardPage() {
       setTotalRoundUp(roundUp);
       setVaultBalance(vault);
 
-      // If user has wallet connected, fetch on-chain balances
-      if (profile?.wallet_address && isMetaMaskInstalled()) {
-        try {
-          const walletAddress = profile.wallet_address as string;
-          const riskyBalance: string = await getRiskyPoolBalance(walletAddress);
-          const safeBalance: string = await getSafeVaultBalance(walletAddress);
 
-          // Update vault balance in database
-          await upsertVaultBalance({
-            user_id: user.id,
-            risky_pool_balance: Number(riskyBalance),
-            safe_vault_balance: Number(safeBalance),
-            last_deposit_tx: null,
-            last_sweep_tx: null,
-          });
-
-          // Reload vault balance
-          const updatedVault = await getVaultBalance(user.id);
-          setVaultBalance(updatedVault);
-        } catch (error) {
-          console.error('Error fetching on-chain balances:', error);
-        }
-      }
     } catch (error) {
       console.error('Error loading data:', error);
       toast.error('Failed to load data');
@@ -106,17 +84,11 @@ export default function DashboardPage() {
   };
 
   const handleDeposit = async () => {
-    if (!profile?.wallet_address) {
+    if (!user || !profile?.wallet_address) {
       toast.error('Please connect your wallet first');
       return;
     }
 
-    if (!isMetaMaskInstalled()) {
-      toast.error('MetaMask is not installed', {
-        description: 'Please install MetaMask browser extension.',
-      });
-      return;
-    }
 
     const amount = Number(depositAmount);
     if (isNaN(amount) || amount <= 0) {
@@ -126,9 +98,13 @@ export default function DashboardPage() {
 
     setDepositing(true);
     try {
-      const txHash = await depositToRiskyPool(depositAmount);
-      toast.success('Deposit successful!', {
-        description: `Transaction: ${txHash.slice(0, 10)}...`,
+      const tx = await submitVaultDeposit({
+        userId: user.id,
+        walletAddress: profile.wallet_address as string,
+        amountStroops: BigInt(Math.floor(Number(depositAmount) * 10_000_000)),
+      });
+      toast.success('Deposit submitted to Soroban oracle', {
+        description: `Request: ${String(tx.id || 'created')}`
       });
       
       // Update vault balance
@@ -138,18 +114,9 @@ export default function DashboardPage() {
     } catch (error: any) {
       console.error('Error depositing:', error);
       
-      // Better error messages
-      if (error.message.includes('not deployed')) {
-        toast.error('Smart contracts not deployed', {
-          description: 'Please deploy the smart contracts first. See DEPLOYMENT.md for instructions.',
-        });
-      } else if (error.message.includes('user rejected')) {
-        toast.error('Transaction cancelled');
-      } else {
-        toast.error('Deposit failed', {
-          description: error.message || 'Please try again',
-        });
-      }
+      toast.error('Deposit failed', {
+        description: error.message || 'Please try again',
+      });
     } finally {
       setDepositing(false);
     }
@@ -201,7 +168,7 @@ export default function DashboardPage() {
           balance={(vaultBalance?.risky_pool_balance || 0).toFixed(4)}
           type="risky"
           onAction={() => setDepositDialogOpen(true)}
-          actionLabel="Deposit ETH"
+          actionLabel="Deposit XLM"
           actionDisabled={!profile?.wallet_address}
         />
         <VaultCard
@@ -226,14 +193,14 @@ export default function DashboardPage() {
       <Dialog open={depositDialogOpen} onOpenChange={setDepositDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Deposit to Risky Pool</DialogTitle>
+            <DialogTitle>Deposit to High-Risk Vault</DialogTitle>
             <DialogDescription>
-              Enter the amount of ETH you want to deposit to the Risky Pool
+              Enter the amount of XLM to route into the Soroban high-risk vault
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount (ETH)</Label>
+              <Label htmlFor="amount">Amount (XLM)</Label>
               <Input
                 id="amount"
                 type="number"
