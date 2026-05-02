@@ -53,7 +53,7 @@ export function VaultCard({
           <div>
             <p className="text-sm text-muted-foreground mb-1">Balance</p>
             <p className="text-3xl font-bold">
-              {balance} <span className="text-lg text-muted-foreground">ETH</span>
+              {balance} <span className="text-lg text-muted-foreground">XLM</span>
             </p>
           </div>
 

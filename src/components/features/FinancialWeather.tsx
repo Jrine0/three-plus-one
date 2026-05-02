@@ -74,7 +74,7 @@ export function FinancialWeather({ status }: FinancialWeatherProps) {
 
         <div className="mt-6 grid grid-cols-3 gap-4">
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">ETH Price</p>
+            <p className="text-xs text-muted-foreground">Market Price</p>
             <p className="text-lg font-semibold">
               ${status.currentPrice.toLocaleString()}
             </p>

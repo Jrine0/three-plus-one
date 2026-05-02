@@ -43,7 +43,7 @@ export function RoundUpTracker({
                 ${totalRoundUp.toFixed(4)}
               </p>
               <p className="text-sm text-muted-foreground">
-                / ${threshold.toFixed(2)} ETH
+                / ${threshold.toFixed(2)} XLM
               </p>
             </div>
             <Progress value={progress} className="h-2" />
@@ -54,7 +54,7 @@ export function RoundUpTracker({
               <TrendingUp className="h-4 w-4" />
               <span>
                 {isReady 
-                  ? 'Ready for conversion to ETH' 
+                  ? 'Ready for conversion to XLM' 
                   : `${((threshold - totalRoundUp) * 100).toFixed(0)}¢ until conversion`
                 }
               </span>
