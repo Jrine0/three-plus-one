@@ -1,0 +1,134 @@
+================================================================================
+                    DeFi Risk Management Platform
+                         HOW TO RUN LOCALLY
+================================================================================
+
+STEP 1: Navigate to Project
+----------------------------
+cd /workspace/app-adlvaxvg0we9
+
+
+STEP 2: Install Dependencies
+----------------------------
+pnpm install
+
+(This will take 2-3 minutes)
+
+
+STEP 3: Start the Application
+----------------------------
+pnpm dev
+
+
+STEP 4: Open in Browser
+----------------------------
+http://localhost:5173
+
+
+STEP 5: Create Your Account
+----------------------------
+1. Click "Sign Up" tab
+2. Enter username (e.g., john_doe)
+3. Enter password (min 6 characters)
+4. Click "Create Account"
+
+⭐ First user becomes ADMIN automatically!
+
+
+STEP 6: Explore Features
+----------------------------
+✅ View Dashboard
+✅ Check Financial Weather
+✅ Browse Vault Cards
+✅ Click "Seed Demo Data" for sample transactions
+✅ Toggle Dark Mode
+
+
+OPTIONAL: Connect MetaMask Wallet
+----------------------------
+1. Install MetaMask from https://metamask.io/download/
+2. Click "Connect Wallet" in app header
+3. Approve connection
+4. Switch to Sepolia testnet
+
+
+================================================================================
+                         ENVIRONMENT VARIABLES
+================================================================================
+
+Location: /workspace/app-adlvaxvg0we9/.env
+
+The .env file is ALREADY CONFIGURED with:
+
+VITE_APP_ID=app-adlvaxvg0we9
+VITE_SUPABASE_URL=https://mworpbclweqduokziquw.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13b3JwYmNsd2VxZHVva3ppcXV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5NDM1ODksImV4cCI6MjA4OTUxOTU4OX0.WTJeCJgLqjGNfw0fncBje39xefbOwQqpJ3ZCvaFvqX0
+
+✅ NO CHANGES NEEDED!
+
+
+================================================================================
+                         AVAILABLE COMMANDS
+================================================================================
+
+pnpm dev       → Start development server (http://localhost:5173)
+pnpm build     → Build for production
+pnpm preview   → Preview production build
+pnpm lint      → Check code quality
+
+
+================================================================================
+                         TROUBLESHOOTING
+================================================================================
+
+Problem: "pnpm: command not found"
+Solution: npm install -g pnpm
+
+Problem: "Port 5173 already in use"
+Solution: lsof -ti:5173 | xargs kill -9
+
+Problem: "MetaMask is not installed"
+Solution: App works without MetaMask! Install only if you want Web3 features.
+
+Problem: Dependencies not installing
+Solution: rm -rf node_modules && pnpm install
+
+
+================================================================================
+                         DOCUMENTATION
+================================================================================
+
+📄 LOCAL_SETUP.md  → Quick 3-step guide (START HERE!)
+📄 SETUP.md        → Complete setup with troubleshooting
+📄 README.md       → Full feature documentation
+📄 DEPLOYMENT.md   → Smart contract deployment guide
+📄 QUICKSTART.md   → 5-minute quick start
+📄 DEMO.md         → Demo presentation guide
+
+
+================================================================================
+                         IMPORTANT NOTES
+================================================================================
+
+✅ Environment file (.env) is pre-configured - no changes needed
+✅ MetaMask is OPTIONAL - app works without it
+✅ Smart contracts are OPTIONAL - for deposit functionality only
+✅ First user to register becomes Admin automatically
+✅ Demo data can be loaded with "Seed Demo Data" button
+✅ Application runs on Sepolia testnet (not real money)
+
+
+================================================================================
+                         QUICK START SUMMARY
+================================================================================
+
+1. cd /workspace/app-adlvaxvg0we9
+2. pnpm install
+3. pnpm dev
+4. Open http://localhost:5173
+5. Create account (first user = admin)
+6. Explore features!
+
+🎉 That's it! You're ready to go!
+
+================================================================================
